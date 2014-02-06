@@ -1,20 +1,19 @@
 Html := Object clone
-Html identStep := 5
-Html ident := 0
+Html ident ::= 0;
 Html forward := method(
   tag := call message name
-  write("" alignRight(ident, " ") ..  "<"  .. tag  .. ">")
-  ident := ident + identStep
-  the_args := call message arguments
-  if(the_args size > 1, writeln)
-  the_args foreach(
-     arg,
-     ident := ident + identStep;
+  prettyPrefix := (" " repeated(self ident() ));
+  #                        ¬ esses pontinhos concatenaram o próprio sistema
+  # writeln(prettyPrefix,  .. "<" .. tag  .. ">");
+  writeln(prettyPrefix,  "<" .. tag  .. ">");
+  self setIdent( self ident + 1 );
+  call message arguments foreach( arg,
      content := self doMessage(arg);
-     ident := ident - identStep;
-     if(content type == "Sequence",  write(content)))
-  ident := ident - identStep;
-  writeln("" alignRight(ident, " ") .. "</" .. tag .. ">"))
+     if(content type == "Sequence",  writeln(prettyPrefix, " ", content););
+  );
+  self setIdent( self ident() - 1);
+  writeln(prettyPrefix, "</", tag, ">");
+);
 
 Html h1("Interesting stuff here")
 Html ul(
